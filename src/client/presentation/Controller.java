@@ -12,10 +12,18 @@ import chatclient.ServiceProxy;
  * @author Porras
  */
 public class Controller {
-    View view;
-    Model model;
+    private View view;
+    private Model model;
+    private ServiceProxy localService;
     
-    ServiceProxy localService;
+    public Controller(View view, Model model) {
+        this.view = view;
+        this.model = model;
+        localService = (ServiceProxy)ServiceProxy.instance();
+        localService.setController(this);
+        //view.setController(this);
+        //view.setModel(model);
+    }
     
     
     public void deliver(String message){
