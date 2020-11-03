@@ -13,7 +13,7 @@ import client.presentation.View;
  *
  * @author Porras
  */
-public class ChatClient {
+public class Application {
 
     /**
      * @param args the command line arguments
