@@ -7,6 +7,7 @@ package client.presentation;
 
 import chatprotocol.Client;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,11 +16,17 @@ import java.util.List;
  */
 public class Model extends java.util.Observable {
     private Client current_user;
-    List<String> messages;
+    private List<String> messages;
+    private List<Client> activos;
+    private ClientsJTable jtableclients;
+    
     
     public Model() {
        current_user = null;
        messages=new ArrayList<>();
+       this.activos = Collections.synchronizedList(new ArrayList<Client>());
+       jtableclients  = new ClientsJTable();
+       
     }
 
     public Client getCurrent_user() {
@@ -37,6 +44,29 @@ public class Model extends java.util.Observable {
     public void setMessages(List<String> messages) {
         this.messages = messages;
     }
+
+    public List<Client> getActivos() {
+        return activos;
+    }
+
+    public void setActivos(List<Client> activos) {
+        this.activos = activos;
+        for (int i = 0; i < activos.size(); i++) {
+            jtableclients.addClient(activos.get(i));
+        }
+    }
+
+    public ClientsJTable getJtableclients() {
+        return jtableclients;
+    }
+
+    public void setJtableclients(ClientsJTable jtableclients) {
+        this.jtableclients = jtableclients;
+    }
+
+    
+    
+    
     
     //----------------Patron Observer------------
     
@@ -49,6 +79,9 @@ public class Model extends java.util.Observable {
         this.setChanged();
         this.notifyObservers();        
     } 
+    
+    
+    
     
     
 }

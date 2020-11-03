@@ -6,6 +6,9 @@
 package client.presentation;
 
 import chatclient.ServiceProxy;
+import chatprotocol.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -19,15 +22,48 @@ public class Controller {
     public Controller(View view, Model model) {
         this.view = view;
         this.model = model;
-        localService = (ServiceProxy)ServiceProxy.instance();
+        localService = (ServiceProxy)ServiceProxy.getInstance();
         localService.setController(this);
-        //view.setController(this);
-        //view.setModel(model);
+        view.setController(this);
+        view.setModel(model);
+    }
+    
+    public void login() throws Exception{
+        //crea un usuario lo busca en la base de datos, null o no
+        Client cl = new Client();
+        cl.setId(view.getLogInID().getText());
+        cl.setPassword(view.getLogInPass().getText());
+        Client islogged = ServiceProxy.getInstance().login(cl);
+        
+        
+        model.setCurrent_user(islogged);
+        model.commit();
+    }
+    
+    
+    
+    public void logout(){
+        try {
+            ServiceProxy.getInstance().logout(model.getCurrent_user());
+        }
+        catch (Exception ex) {}
+        model.setCurrent_user(null);
+        model.setMessages(new ArrayList<String>());
+        model.commit();
     }
     
     
     public void deliver(String message){
         model.getMessages().add(message);
         model.commit();    
+    }
+    
+    public void setActivos(List<Client> clients){
+        model.setActivos(clients);
+        model.commit();
+    }
+    
+    public void addtoTableActivos(Client cl){
+        model.getJtableclients().addClient(cl);
     }
 }

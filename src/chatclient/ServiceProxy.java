@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities;
  */
 public class ServiceProxy  implements IService{
     
-    public static IService singleton;
+    private static IService singleton;
     
     
     private Socket skt;    
@@ -29,7 +29,7 @@ public class ServiceProxy  implements IService{
     private boolean continuar = true;
     
     
-    public static IService instance(){
+    public static IService getInstance(){
         if (singleton == null) {
             singleton = new ServiceProxy();     
         }
@@ -45,9 +45,11 @@ public class ServiceProxy  implements IService{
     }
     
     public void start(){
+        //inicia el thread que recibe las peticiones del server
         Thread t = new Thread(new Runnable(){
             public void run(){
                 listen();
+                
 
             }
         });
@@ -56,21 +58,57 @@ public class ServiceProxy  implements IService{
     }
     
     public void listen(){
+        //dependiendo de la entrada realiza X accion
         int method;
         while (continuar) {
-            try {
+            try 
+            {
                 method = in.readInt();
-                switch(method){
+                
+                switch(method)
+                {
                     case Protocol.DELIVER:
                         try {
                             String message=(String)in.readObject();
                             deliver(message);
                         } 
                         catch (ClassNotFoundException ex) 
-                        {}
-                    break;
-                    
+                        {
+                        }
                         
+                    break;   
+                }//fin switch
+                
+                out.flush();
+                requestClients();
+                updateTable();
+            } 
+            catch (IOException  ex) {
+                continuar = false;
+            }                        
+        }//fin while(continuar)
+    }
+
+    
+    private void updateTable(){
+       int method;
+       continuar = true;
+        while (continuar) {
+            try 
+            {
+                method = in.readInt();
+                
+                switch(method)
+                {
+                    case Protocol.ON_USERS:
+                        try {
+                            List<Client> active_clients = (List<Client>) in.readObject();
+                            this.controller.setActivos(active_clients);
+                        } 
+                        catch (ClassNotFoundException ex) 
+                        {
+                        }
+                    break;   
                 }//fin switch
                 
                 out.flush();
@@ -78,9 +116,19 @@ public class ServiceProxy  implements IService{
             catch (IOException  ex) {
                 continuar = false;
             }                        
+        }//fin while(continuar) 
+        
+    }
+    
+    
+    private void requestClients(){
+        try {
+            out.writeInt(Protocol.REQ_USERS);
+            out.flush();
+        }
+        catch (Exception e) {
         }
     }
-
     
     private void connect() throws Exception{
         skt = new Socket(Protocol.SERVER,Protocol.PORT);
@@ -107,7 +155,25 @@ public class ServiceProxy  implements IService{
     
     @Override
     public Client login(Client client) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       this.connect();
+        try {
+            out.writeInt(Protocol.LOGIN);
+            out.writeObject(client);
+            out.flush();
+            int response = in.readInt();
+            if(response == Protocol.ERROR_NO_ERROR){
+                Client clienteIn =  (Client) in.readObject();
+                this.start();
+                return clienteIn;
+            }
+            else{
+                disconnect();
+                throw new Exception("No se ha encontrado el usuario");
+            }
+            
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -118,9 +184,6 @@ public class ServiceProxy  implements IService{
         this.stop();
         this.disconnect();
     }
-    
-    
-    
     
     
     public void stop(){
@@ -135,6 +198,11 @@ public class ServiceProxy  implements IService{
 
     @Override
     public void post_msg(String string, Client client) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void giveClients() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
