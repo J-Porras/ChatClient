@@ -160,11 +160,13 @@ public class ServiceProxy  implements IService{
             out.writeInt(Protocol.LOGIN);
             out.writeObject(client);
             out.flush();
+            System.out.print("sign in");
             int response = in.readInt();
             if(response == Protocol.ERROR_NO_ERROR){
                 Client clienteIn =  (Client) in.readObject();
                 this.start();
                 return clienteIn;
+                
             }
             else{
                 disconnect();

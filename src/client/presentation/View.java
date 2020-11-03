@@ -116,7 +116,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         jLabel2.setText("Log In");
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel3.setText("Sign In");
+        jLabel3.setText("Sign Up");
 
         jLabel4.setText("ID");
 

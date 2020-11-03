@@ -5,6 +5,10 @@
  */
 package chatclient;
 
+import client.presentation.Controller;
+import client.presentation.Model;
+import client.presentation.View;
+
 /**
  *
  * @author Porras
@@ -15,7 +19,10 @@ public class ChatClient {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // BASURA
+        Model m= new Model();
+        View v = new View();
+        Controller c= new Controller(v,m);
+        v.setVisible(true);
     }
     
 }
