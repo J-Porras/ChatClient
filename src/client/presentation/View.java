@@ -46,13 +46,14 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             loginPanel.setVisible(true);
             //loginPanel.setLocale(null);
             chatPanel.setVisible(false);
+            System.out.print("updatefail");
             
 
         }
         else{
             loginPanel.setVisible(false);
             chatPanel.setVisible(true);
-            
+            System.out.print("updatewin");
             
             this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
             
@@ -61,16 +62,42 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     }
 
     public JTextField getLogInID() {
-        return LogInID;
+        return logInID;
     }
 
     public JTextField getLogInPass() {
-        return LogInPass;
+        return logInPas;
     }
 
     public JTable getTableUsuarios() {
         return tableUsuarios;
     }
+
+    public JTextField getLogInNick() {
+        return logInNick;
+    }
+
+    public void setLogInNick(JTextField logInNick) {
+        this.logInNick = logInNick;
+    }
+
+    public JTextField getLogInNombre() {
+        return logInNombre;
+    }
+
+    public void setLogInNombre(JTextField logInNombre) {
+        this.logInNombre = logInNombre;
+    }
+
+    public JTextField getLogInPas() {
+        return logInPas;
+    }
+
+    public void setLogInPas(JTextField logInPas) {
+        this.logInPas = logInPas;
+    }
+    
+    
     
    
     
@@ -87,22 +114,16 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         loginPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        signInID = new javax.swing.JTextField();
-        SignInNombre = new javax.swing.JTextField();
-        SignInNick = new javax.swing.JTextField();
-        SignInPass = new javax.swing.JTextField();
-        LogInID = new javax.swing.JTextField();
-        LogInPass = new javax.swing.JTextField();
-        SignIn = new javax.swing.JButton();
+        logInNick = new javax.swing.JTextField();
+        logInID = new javax.swing.JTextField();
+        logInPas = new javax.swing.JTextField();
         logIn = new javax.swing.JButton();
         Exit = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        logInNombre = new javax.swing.JTextField();
         chatPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -119,37 +140,21 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel2.setText("Log In");
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel3.setText("Sign Up");
-
-        jLabel4.setText("ID");
-
-        jLabel5.setText("Nombre");
-
-        jLabel6.setText("Contraseña");
-
         jLabel7.setText("Nickname");
 
         jLabel8.setText("ID");
 
         jLabel9.setText("Contraseña");
 
-        SignInPass.addActionListener(new java.awt.event.ActionListener() {
+        logInNick.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SignInPassActionPerformed(evt);
+                logInNickActionPerformed(evt);
             }
         });
 
-        LogInID.addActionListener(new java.awt.event.ActionListener() {
+        logInID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LogInIDActionPerformed(evt);
-            }
-        });
-
-        SignIn.setText("Sign In");
-        SignIn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SignInActionPerformed(evt);
+                logInIDActionPerformed(evt);
             }
         });
 
@@ -167,97 +172,75 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             }
         });
 
+        jLabel3.setText("Nombre");
+
+        logInNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logInNombreActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
         loginPanel.setLayout(loginPanelLayout);
         loginPanelLayout.setHorizontalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(246, 246, 246))
             .addGroup(loginPanelLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(118, 118, 118)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(logIn)
                     .addGroup(loginPanelLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(SignInNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(loginPanelLayout.createSequentialGroup()
-                                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addGap(41, 41, 41)
-                                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(signInID, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jLabel1))
+                    .addGroup(loginPanelLayout.createSequentialGroup()
                         .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
                             .addComponent(jLabel7)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(SignIn)
-                            .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(SignInPass)
-                                .addComponent(SignInNick, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)))))
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(loginPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(220, 220, 220))
-                    .addGroup(loginPanelLayout.createSequentialGroup()
-                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(49, 49, 49))
-                            .addGroup(loginPanelLayout.createSequentialGroup()
-                                .addGap(81, 81, 81)
-                                .addComponent(Exit)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(LogInID, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
-                                .addComponent(LogInPass))
-                            .addComponent(logIn))
-                        .addGap(27, 27, 27))))
+                            .addComponent(jLabel3))
+                        .addGap(101, 101, 101)
+                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(Exit)
+                            .addComponent(logInNick, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(logInID, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(logInPas, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(logInNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE))))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
         loginPanelLayout.setVerticalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(7, 7, 7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addGap(56, 56, 56)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel2))
-                .addGap(35, 35, 35)
+                    .addComponent(jLabel8)
+                    .addComponent(logInID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(signInID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(LogInID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel9)
-                        .addComponent(LogInPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(SignInNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(26, 26, 26)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(loginPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(25, 25, 25))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                        .addComponent(logInNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
-                    .addComponent(SignInNick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                    .addComponent(logInNick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(SignInPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+                    .addComponent(jLabel9)
+                    .addComponent(logInPas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SignIn)
                     .addComponent(logIn)
                     .addComponent(Exit))
-                .addGap(19, 19, 19))
+                .addGap(132, 132, 132))
         );
 
         jLabel10.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -298,11 +281,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(chatPanelLayout.createSequentialGroup()
                 .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(chatPanelLayout.createSequentialGroup()
-                            .addGap(31, 31, 31)
-                            .addComponent(jLabel11))
                         .addGroup(chatPanelLayout.createSequentialGroup()
                             .addGap(18, 18, 18)
                             .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,14 +289,18 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(chatPanelLayout.createSequentialGroup()
                             .addGap(17, 17, 17)
-                            .addComponent(jButton1))))
+                            .addComponent(jButton1)))
+                    .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel11)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(358, Short.MAX_VALUE))
         );
         chatPanelLayout.setVerticalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(chatPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel11)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
@@ -334,54 +317,45 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void SignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignInActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SignInActionPerformed
-
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         try {
             this.controller.login();
-            this.LogInID.setText("");
-            this.LogInPass.setText("");
+            this.logInID.setText("");
+            this.logInPas.setText("");
             
             
             
             
         } catch (Exception e) {
-            this.LogInID.setBackground(Color.red);
-            this.LogInPass.setBackground(Color.red);
+            System.out.print("catch login action performed: ");
+            System.out.println(e.toString());
+            this.logInID.setBackground(Color.red);
+            this.logInPas.setBackground(Color.red);
         }
     }//GEN-LAST:event_logInActionPerformed
 
-    private void SignInPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignInPassActionPerformed
+    private void logInIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SignInPassActionPerformed
-
-    private void LogInIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogInIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_LogInIDActionPerformed
+    }//GEN-LAST:event_logInIDActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
         // TODO add your handling code here:
@@ -395,6 +369,14 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void logInNickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInNickActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_logInNickActionPerformed
+
+    private void logInNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_logInNombreActionPerformed
 
     /**
      * @param args the command line arguments
@@ -435,12 +417,6 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Exit;
-    private javax.swing.JTextField LogInID;
-    private javax.swing.JTextField LogInPass;
-    private javax.swing.JButton SignIn;
-    private javax.swing.JTextField SignInNick;
-    private javax.swing.JTextField SignInNombre;
-    private javax.swing.JTextField SignInPass;
     private javax.swing.JPanel chatPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -448,17 +424,17 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JButton logIn;
+    private javax.swing.JTextField logInID;
+    private javax.swing.JTextField logInNick;
+    private javax.swing.JTextField logInNombre;
+    private javax.swing.JTextField logInPas;
     private javax.swing.JPanel loginPanel;
-    private javax.swing.JTextField signInID;
     private javax.swing.JTable tableUsuarios;
     // End of variables declaration//GEN-END:variables
 }

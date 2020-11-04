@@ -187,24 +187,30 @@ public class ServiceProxy  implements IService{
     @Override
     public Client login(Client client) throws Exception {
         connect();
+
         try {
+            System.out.println("\n" + "inside login");
             out.writeInt(Protocol.LOGIN);
             out.writeObject(client);
             out.flush();
-            System.out.print("sign in");
+            System.out.println("\n" + "Objeto flusheado");
+            
             int response = in.readInt();
             if(response == Protocol.ERROR_NO_ERROR){
                 Client clienteIn =  (Client) in.readObject();
                 this.start();
+                System.out.println("\n" + "inside login y conectado");
                 return clienteIn;
                 
             }
             else{
                 disconnect();
+                System.out.println("\n" + "error de la base de datos");
                 throw new Exception("No se ha encontrado el usuario");
-            }
+            } 
             
         } catch (Exception e) {
+            System.out.println("error try catch login");
             return null;
         }
     }

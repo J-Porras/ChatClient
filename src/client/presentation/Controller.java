@@ -33,10 +33,27 @@ public class Controller {
         Client cl = new Client();
         cl.setId(view.getLogInID().getText());
         cl.setPassword(view.getLogInPass().getText());
+        cl.setNombre(view.getLogInNombre().getText());
+        cl.setNickname(view.getLogInNick().getText());
+        
+        
+        System.out.print("\n" + view.getLogInID().getText());//probando datos
+          
+        System.out.print("\n" + view.getLogInPass().getText());
+        
+        
         Client islogged = ServiceProxy.getInstance().login(cl);
         
         
+        
+        
         model.setCurrent_user(islogged);
+       
+        System.out.print("\nController fin, usuario asignado a model"+ model.getCurrent_user().getNickname());
+        
+        System.out.print("\nNickname: "+model.getCurrent_user().getNickname()+"\n");
+      
+        
         model.commit();
     }
     
