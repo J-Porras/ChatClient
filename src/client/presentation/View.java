@@ -44,16 +44,17 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     public void update(Observable o, Object arg) {
         if (this.model.getCurrent_user() == null) {
             loginPanel.setVisible(true);
-            loginPanel.setLocale(null);
+            //loginPanel.setLocale(null);
             chatPanel.setVisible(false);
             
+
         }
         else{
             loginPanel.setVisible(false);
             chatPanel.setVisible(true);
             
-            this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
             
+            this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
             
         }
         this.validate();

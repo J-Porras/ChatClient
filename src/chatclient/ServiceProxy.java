@@ -152,31 +152,7 @@ public class ServiceProxy  implements IService{
    }
 
     
-    
-    @Override
-    public Client login(Client client) throws Exception {
-       this.connect();
-        try {
-            out.writeInt(Protocol.LOGIN);
-            out.writeObject(client);
-            out.flush();
-            System.out.print("sign in");
-            int response = in.readInt();
-            if(response == Protocol.ERROR_NO_ERROR){
-                Client clienteIn =  (Client) in.readObject();
-                this.start();
-                return clienteIn;
-                
-            }
-            else{
-                disconnect();
-                throw new Exception("No se ha encontrado el usuario");
-            }
-            
-        } catch (Exception e) {
-            return null;
-        }
-    }
+
 
     @Override
     public void logout(Client client) throws Exception {
@@ -206,6 +182,31 @@ public class ServiceProxy  implements IService{
     @Override
     public void giveClients() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Client login(Client client) throws Exception {
+        connect();
+        try {
+            out.writeInt(Protocol.LOGIN);
+            out.writeObject(client);
+            out.flush();
+            System.out.print("sign in");
+            int response = in.readInt();
+            if(response == Protocol.ERROR_NO_ERROR){
+                Client clienteIn =  (Client) in.readObject();
+                this.start();
+                return clienteIn;
+                
+            }
+            else{
+                disconnect();
+                throw new Exception("No se ha encontrado el usuario");
+            }
+            
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }
