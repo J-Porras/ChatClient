@@ -18,6 +18,7 @@ public class Controller {
     private View view;
     private Model model;
     private ServiceProxy localService;
+    private int attempts = 0;
     
     public Controller(View view, Model model) {
         this.view = view;
@@ -26,6 +27,14 @@ public class Controller {
         localService.setController(this);
         view.setController(this);
         view.setModel(model);
+    }
+    
+    public void increseAttempts(){
+        attempts=attempts+1;
+    }
+    
+    public int getAttempts(){
+        return this.attempts;
     }
     
     public void login() throws Exception{
@@ -82,5 +91,9 @@ public class Controller {
     
     public void addtoTableActivos(Client cl){
         model.getJtableclients().addClient(cl);
+    }
+    
+    public void updateFriends(Client c) throws Exception{
+        ServiceProxy.getInstance().giveClients(c);
     }
 }

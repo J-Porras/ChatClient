@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.SwingUtilities;
 
@@ -44,6 +46,10 @@ public class ServiceProxy  implements IService{
         this.controller = controller;
     }
     
+    public void stop(){
+        continuar=false;
+    }
+    
     public void start(){
         //inicia el thread que recibe las peticiones del server
         Thread t = new Thread(new Runnable(){
@@ -75,13 +81,25 @@ public class ServiceProxy  implements IService{
                         catch (ClassNotFoundException ex) 
                         {
                         }
-                        
                     break;   
+                    
+                    case Protocol.ON_USERS:
+                        try {
+                            List<Client> friends = Collections.synchronizedList(new ArrayList<Client>());
+                            friends = (List<Client>) in.readObject();
+                            deliverFriends(friends);
+                            
+                        }
+                        catch (Exception e) {
+                        }
+                    
+                        
+                        
+                    break;
+                    
                 }//fin switch
                 
                 out.flush();
-                requestClients();
-                updateTable();
             } 
             catch (IOException  ex) {
                 continuar = false;
@@ -90,45 +108,7 @@ public class ServiceProxy  implements IService{
     }
 
     
-    private void updateTable(){
-       int method;
-       continuar = true;
-        while (continuar) {
-            try 
-            {
-                method = in.readInt();
-                
-                switch(method)
-                {
-                    case Protocol.ON_USERS:
-                        try {
-                            List<Client> active_clients = (List<Client>) in.readObject();
-                            this.controller.setActivos(active_clients);
-                        } 
-                        catch (ClassNotFoundException ex) 
-                        {
-                        }
-                    break;   
-                }//fin switch
-                
-                out.flush();
-            } 
-            catch (IOException  ex) {
-                continuar = false;
-            }                        
-        }//fin while(continuar) 
-        
-    }
     
-    
-    private void requestClients(){
-        try {
-            out.writeInt(Protocol.REQ_USERS);
-            out.flush();
-        }
-        catch (Exception e) {
-        }
-    }
     
     private void connect() throws Exception{
         skt = new Socket(Protocol.SERVER,Protocol.PORT);
@@ -150,6 +130,10 @@ public class ServiceProxy  implements IService{
          }
       );
    }
+    
+    private void deliverFriends(List<Client> friends){
+        controller.setActivos(friends);
+    }
 
     
 
@@ -164,24 +148,36 @@ public class ServiceProxy  implements IService{
     }
     
     
-    public void stop(){
-        continuar=false;
-    }
-    
 
     @Override
     public void signin(Client client) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void post_msg(String string, Client client) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+     @Override
+    public void post_msg(String msg, Client c) throws Exception {//cliente emisor
+        try {
+            out.writeInt(Protocol.MSG);
+            out.writeObject(msg);
+            out.flush();            
+        } 
+        catch (IOException ex) {} 
     }
 
+
     @Override
-    public void giveClients() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void giveClients(Client c) throws Exception {
+        
+        try {
+            System.out.println("Inside give Clients");
+            out.writeInt(Protocol.REQ_USERS);
+            out.writeObject(c);
+            out.flush();
+            System.out.println("Give clients: Objeto flusheado");
+        }
+        catch (Exception e) {
+        }
+        
     }
 
     @Override
@@ -215,5 +211,7 @@ public class ServiceProxy  implements IService{
             return null;
         }
     }
+
+   
     
 }

@@ -7,8 +7,11 @@ package client.presentation;
 
 import java.awt.Color;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -28,6 +31,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     Controller controller;
     Model model;
     
+    
     public void setModel(Model model){
         this.model = model;
         model.addObserver(this);
@@ -43,11 +47,17 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (this.model.getCurrent_user() == null) {
-            loginPanel.setVisible(true);
-            //loginPanel.setLocale(null);
-            chatPanel.setVisible(false);
-            System.out.print("updatefail");
-            
+            this.controller.increseAttempts();
+            if (this.controller.getAttempts() > 0) {
+                loginPanel.setVisible(true);
+                //loginPanel.setLocale(null);
+                chatPanel.setVisible(false);
+                System.out.print("updatefail");
+                this.logInID.setBackground(Color.red);
+                this.logInPas.setBackground(Color.red);
+                this.logInNombre.setBackground(Color.red);
+                this.logInNick.setBackground(Color.red);
+            }
 
         }
         else{
@@ -58,6 +68,10 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
             
         }
+        if (!model.getActivos().isEmpty()) {
+            this.tableOnline.setModel(new ClientsJTable(model.getActivos()));
+        }
+        
         this.validate();
     }
 
@@ -70,7 +84,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     }
 
     public JTable getTableUsuarios() {
-        return tableUsuarios;
+        return tableOnline;
     }
 
     public JTextField getLogInNick() {
@@ -127,10 +141,12 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         chatPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableUsuarios = new javax.swing.JTable();
+        tableOnline = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        chatArea = new java.awt.TextArea();
+        refresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -236,7 +252,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(logInPas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(logIn)
                     .addComponent(Exit))
@@ -246,7 +262,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         jLabel10.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel10.setText("Contactos Activos ");
 
-        tableUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+        tableOnline.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null},
                 {null},
@@ -257,7 +273,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 "Usuarios"
             }
         ));
-        jScrollPane1.setViewportView(tableUsuarios);
+        jScrollPane1.setViewportView(tableOnline);
 
         jLabel11.setText("Agregar");
 
@@ -275,39 +291,56 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             }
         });
 
+        refresh.setText("Refrescar");
+        refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout chatPanelLayout = new javax.swing.GroupLayout(chatPanel);
         chatPanel.setLayout(chatPanelLayout);
         chatPanelLayout.setHorizontalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(jButton1)
+                .addGap(242, 242, 242))
             .addGroup(chatPanelLayout.createSequentialGroup()
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(chatPanelLayout.createSequentialGroup()
-                            .addGap(18, 18, 18)
-                            .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel10)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(chatPanelLayout.createSequentialGroup()
-                            .addGap(17, 17, 17)
-                            .addComponent(jButton1)))
-                    .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel11)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(358, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(chatArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))
+                    .addGroup(chatPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(chatPanelLayout.createSequentialGroup()
+                        .addComponent(refresh)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         chatPanelLayout.setVerticalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(chatPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel11))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel10)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chatArea, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(refresh)
                 .addContainerGap())
         );
 
@@ -320,16 +353,18 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(chatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -378,6 +413,17 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         // TODO add your handling code here:
     }//GEN-LAST:event_logInNombreActionPerformed
 
+    private void refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshActionPerformed
+        try {
+            System.out.println("Try Cath refresh button");
+            this.controller.updateFriends(model.getCurrent_user());
+            System.out.println("Friends updated");
+        } catch (Exception ex) {
+            System.out.println("error Try Cath refresh button");
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_refreshActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -417,6 +463,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Exit;
+    private java.awt.TextArea chatArea;
     private javax.swing.JPanel chatPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -435,6 +482,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private javax.swing.JTextField logInNombre;
     private javax.swing.JTextField logInPas;
     private javax.swing.JPanel loginPanel;
-    private javax.swing.JTable tableUsuarios;
+    private javax.swing.JButton refresh;
+    private javax.swing.JTable tableOnline;
     // End of variables declaration//GEN-END:variables
 }
