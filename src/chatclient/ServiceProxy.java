@@ -196,6 +196,7 @@ public class ServiceProxy  implements IService{
             System.out.println("\n" + "Objeto flusheado");
             
             int response = in.readInt();
+            
             if(response == Protocol.ERROR_NO_ERROR){
                 Client clienteIn =  (Client) in.readObject();
                 this.start();
@@ -205,7 +206,7 @@ public class ServiceProxy  implements IService{
             }
             else{
                 disconnect();
-                System.out.println("\n" + "error de la base de datos");
+                System.out.println("\n" + "Cliente: Protocolo desconocido: " + Integer.toString(response));
                 throw new Exception("No se ha encontrado el usuario");
             } 
             
