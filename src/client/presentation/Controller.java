@@ -96,4 +96,19 @@ public class Controller {
     public void updateFriends(Client c) throws Exception{
         ServiceProxy.getInstance().giveClients(c);
     }
+    
+    public void addFriend(String id) throws Exception{
+        Client friend = new Client();
+        friend.setId(id);
+        friend = ServiceProxy.getInstance().addFriend(friend);
+        if (friend != null) {
+            model.getCurrent_user().getFriends().add(friend);
+            this.updateFriends(model.getCurrent_user());
+        }
+        else{
+            System.out.println("Null pointer para amigo");
+        }
+        
+        
+    }
 }

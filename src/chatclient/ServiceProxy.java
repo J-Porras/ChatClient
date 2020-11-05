@@ -91,11 +91,10 @@ public class ServiceProxy  implements IService{
                             
                         }
                         catch (Exception e) {
-                        }
-                    
-                        
-                        
+                        }  
                     break;
+                    
+                    
                     
                 }//fin switch
                 
@@ -133,6 +132,11 @@ public class ServiceProxy  implements IService{
     
     private void deliverFriends(List<Client> friends){
         controller.setActivos(friends);
+    }
+    
+    private void addNewFriend(Client c){
+        
+        
     }
 
     
@@ -204,6 +208,32 @@ public class ServiceProxy  implements IService{
                 disconnect();
                 System.out.println("\n" + "Cliente: Protocolo desconocido: " + Integer.toString(response));
                 throw new Exception("No se ha encontrado el usuario");
+            } 
+            
+        } catch (Exception e) {
+            System.out.println("error try catch login");
+            return null;
+        }
+    }
+
+    @Override
+    public Client addFriend(Client c) throws Exception {
+        
+        try {
+            out.writeInt(Protocol.ADD_USER);
+            out.writeObject(c);
+            out.flush(); 
+            
+            int response = in.readInt();
+            
+            if(response == Protocol.ERROR_NO_ERROR){
+                Client clienteIn =  (Client) in.readObject();
+                
+                return clienteIn;             
+            }
+            else{
+                System.out.println("Cliente: No se ha encontrado el usuario para agregar");
+                throw new Exception("No se ha encontrado el usuario para agregar");
             } 
             
         } catch (Exception e) {

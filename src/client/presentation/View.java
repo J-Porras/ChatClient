@@ -143,7 +143,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableOnline = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtNewFriend = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         chatArea = new java.awt.TextArea();
         refresh = new javax.swing.JButton();
@@ -277,10 +277,10 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
         jLabel11.setText("Agregar");
 
-        jTextField1.setText("Buscar...");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtNewFriend.setText("Buscar...");
+        txtNewFriend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtNewFriendActionPerformed(evt);
             }
         });
 
@@ -306,10 +306,10 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addGap(242, 242, 242))
+                .addGap(265, 265, 265))
             .addGroup(chatPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,7 +330,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             .addGroup(chatPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)
                     .addComponent(jLabel11))
                 .addGap(18, 18, 18)
@@ -397,12 +397,16 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         System.exit(0);
     }//GEN-LAST:event_ExitActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtNewFriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNewFriendActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtNewFriendActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            this.controller.addFriend(this.txtNewFriend.getText());
+        } catch (Exception ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void logInNickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInNickActionPerformed
@@ -475,7 +479,6 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton logIn;
     private javax.swing.JTextField logInID;
     private javax.swing.JTextField logInNick;
@@ -484,5 +487,6 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private javax.swing.JPanel loginPanel;
     private javax.swing.JButton refresh;
     private javax.swing.JTable tableOnline;
+    private javax.swing.JTextField txtNewFriend;
     // End of variables declaration//GEN-END:variables
 }
