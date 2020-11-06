@@ -19,6 +19,7 @@ public class Model extends java.util.Observable {
     private List<String> messages;
     private List<Client> activos;
     private ClientsJTable jtableclients;
+    private Client current_destino;
     
     
     public Model() {
@@ -28,6 +29,17 @@ public class Model extends java.util.Observable {
        jtableclients  = new ClientsJTable();
        
     }
+
+    public Client getCurrent_destino() {
+        return current_destino;
+    }
+
+    public void setCurrent_destino(Client current_destino) {
+        this.current_destino = current_destino;
+    }
+    
+    
+    
 
     public Client getCurrent_user() {
         return current_user;

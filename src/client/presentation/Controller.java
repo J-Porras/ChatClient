@@ -80,6 +80,7 @@ public class Controller {
     
     
     public void deliver(String message){
+        
         model.getMessages().add(message);
         model.commit();    
     }
@@ -97,18 +98,28 @@ public class Controller {
         ServiceProxy.getInstance().giveClients(c);
     }
     
+    public void sendMSG(){
+        String msg = model.getCurrent_user().getNickname() + view.getPostmsg().getText();
+        
+        
+    }
+    
     public void addFriend(String id) throws Exception{
-        Client friend = new Client();
-        friend.setId(id);
-        friend = ServiceProxy.getInstance().addFriend(friend);
-        if (friend != null) {
-            model.getCurrent_user().getFriends().add(friend);
-            this.updateFriends(model.getCurrent_user());
+        if (!this.isDuplicated(id)) {
+            Client c = new Client();
+            c.setNickname(id);
+            model.getActivos().add(c);
+            model.commit();
         }
-        else{
-            System.out.println("Null pointer para amigo");
+
+    }
+    
+    private boolean isDuplicated(String id){
+        for (int i = 0; i < model.getActivos().size(); i++) {
+            if (id == model.getActivos().get(i).getId()) {
+                return true;
+            }
         }
-        
-        
+        return false;
     }
 }

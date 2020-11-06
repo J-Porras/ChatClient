@@ -121,7 +121,7 @@ public class ServiceProxy  implements IService{
         skt.close();
     }
     
-    private void deliver( final String  message ){
+    private void deliver( final String  message){
       SwingUtilities.invokeLater(new Runnable(){
             public void run(){
                controller.deliver(message);
@@ -133,13 +133,6 @@ public class ServiceProxy  implements IService{
     private void deliverFriends(List<Client> friends){
         controller.setActivos(friends);
     }
-    
-    private void addNewFriend(Client c){
-        
-        
-    }
-
-    
 
 
     @Override
@@ -157,17 +150,6 @@ public class ServiceProxy  implements IService{
     public void signin(Client client) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-     @Override
-    public void post_msg(String msg, Client c) throws Exception {//cliente emisor
-        try {
-            out.writeInt(Protocol.MSG);
-            out.writeObject(msg);
-            out.flush();            
-        } 
-        catch (IOException ex) {} 
-    }
-
 
     @Override
     public void giveClients(Client c) throws Exception {
@@ -220,13 +202,19 @@ public class ServiceProxy  implements IService{
     public Client addFriend(Client c) throws Exception {
         
         try {
+            System.out.println("add friend override de cliente");
             out.writeInt(Protocol.ADD_USER);
             out.writeObject(c);
             out.flush(); 
             
+            System.out.println("cliente new friend flusheado");
+            
             int response = in.readInt();
             
+            System.out.println("Server respueta: " + Integer.toString(response));
+            
             if(response == Protocol.ERROR_NO_ERROR){
+                System.out.println("No error respuesta del server");
                 Client clienteIn =  (Client) in.readObject();
                 
                 return clienteIn;             
@@ -237,8 +225,20 @@ public class ServiceProxy  implements IService{
             } 
             
         } catch (Exception e) {
-            System.out.println("error try catch login");
+            System.out.println("error try catch new friend");
             return null;
+        }
+    }
+
+    @Override
+    public void post(String msg,Client c) throws Exception {
+        try {
+            out.writeInt(Protocol.MSG);
+            out.writeObject(msg);
+            out.flush();
+            
+        }
+        catch (Exception e) {
         }
     }
 
