@@ -5,6 +5,7 @@
  */
 package client.presentation;
 
+import chatprotocol.Client;
 import java.awt.Color;
 import java.util.Observable;
 import java.util.logging.Level;
@@ -46,14 +47,17 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("veces en update: " + Integer.toString(controller.getAttempts()));
         
-        if (this.model.getCurrent_user() == null) {
+        if (this.controller.getUser() == null) {
+            System.out.println("cliente null dijo el view");
+            chatPanel.setVisible(false);
             this.controller.increseAttempts();
-            if (this.controller.getAttempts() > 0) {
+            if (this.controller.getAttempts() > 1) {
                 loginPanel.setVisible(true);
                 //loginPanel.setLocale(null);
                 chatPanel.setVisible(false);
-                System.out.print("updatefail");
+ 
                 this.logInID.setBackground(Color.red);
                 this.logInPas.setBackground(Color.red);
                 this.logInNombre.setBackground(Color.red);
@@ -62,11 +66,24 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
         }
         else{
+            System.out.println("else");
             loginPanel.setVisible(false);
             chatPanel.setVisible(true);
-            System.out.print("updatewin");
             
+            if (model.getCurrent_destino()!=null) {
+                this.setTitle("Usuario: " + model.getCurrent_user().getNombre()+ "Chateando con " + 
+                        model.getCurrent_destino().getNickname());
+            }
+                    
             this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
+            String msg = "";
+            for( String m: model.getMessages()){
+                msg+=(m +"\n");
+                this.chatArea.setText(msg);
+            }
+            this.chatArea.setText(msg);
+            this.postmsg.setText("");
+            this.postmsg.requestFocus();
             
         }
         if (!model.getActivos().isEmpty()) {
@@ -155,6 +172,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         chatArea = new java.awt.TextArea();
         postmsg = new javax.swing.JTextField();
         postBtn = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -274,11 +292,15 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 "Usuarios"
             }
         ));
+        tableOnline.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableOnlineMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableOnline);
 
-        jLabel11.setText("Agregar");
+        jLabel11.setText("Agregar por nickname");
 
-        txtNewFriend.setText("Buscar...");
         txtNewFriend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNewFriendActionPerformed(evt);
@@ -305,6 +327,13 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             }
         });
 
+        jButton1.setText("Log out");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout chatPanelLayout = new javax.swing.GroupLayout(chatPanel);
         chatPanel.setLayout(chatPanelLayout);
         chatPanelLayout.setHorizontalGroup(
@@ -313,19 +342,20 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 .addGap(14, 14, 14)
                 .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(chatPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                        .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addFriend)
-                        .addGap(265, 265, 265))
-                    .addGroup(chatPanelLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(chatPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
                         .addGap(25, 25, 25)
                         .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(chatPanelLayout.createSequentialGroup()
+                                .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(addFriend)
+                                .addGap(56, 56, 56)
+                                .addComponent(jButton1))
                             .addGroup(chatPanelLayout.createSequentialGroup()
                                 .addComponent(postmsg)
                                 .addGap(18, 18, 18)
@@ -340,7 +370,8 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addFriend)
-                    .addComponent(jLabel11))
+                    .addComponent(jLabel11)
+                    .addComponent(jButton1))
                 .addGap(24, 24, 24)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -363,7 +394,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -389,8 +420,6 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             
             
         } catch (Exception e) {
-            System.out.print("catch login action performed: ");
-            System.out.println(e.toString());
             this.logInID.setBackground(Color.red);
             this.logInPas.setBackground(Color.red);
         }
@@ -422,45 +451,72 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     }//GEN-LAST:event_postmsgActionPerformed
 
     private void postBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postBtnActionPerformed
-        // TODO add your handling code here:
-        String mensaje = this.postmsg.getText();
+        try {
+            // TODO add your handling code here:
+            controller.sendMSG();
+        } catch (Exception ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_postBtnActionPerformed
+
+    private void tableOnlineMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableOnlineMouseClicked
+        // TODO add your handling code here
+        
+        
+        try {
+            String idfriend = this.tableOnline.getValueAt(tableOnline.getSelectedRow(), 0).toString();
+            System.out.println("despues de id friend");
+            System.out.println("Nickname captado: " + idfriend);
+            controller.setDestino(idfriend);
+            controller.setCurrentChat();
+        } catch (Exception e) {
+            System.out.println("Error captado en view ");
+        }
+        
+        
+    }//GEN-LAST:event_tableOnlineMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new View().setVisible(true);
-            }
-        });
-    }
+    
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new View().setVisible(true);
+//            }
+//        });
+//    }
 
 
 
@@ -469,6 +525,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private javax.swing.JButton addFriend;
     private java.awt.TextArea chatArea;
     private javax.swing.JPanel chatPanel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

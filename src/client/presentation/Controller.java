@@ -6,8 +6,10 @@
 package client.presentation;
 
 import chatclient.ServiceProxy;
+import chatclient.ServiceXml;
 import chatprotocol.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,6 +39,21 @@ public class Controller {
         return this.attempts;
     }
     
+    public void setDestino(String nickname){
+        
+        
+        
+        try {
+            System.out.println("Controller: set destino");
+            Client friend = model.getCurrent_user().findFriend(nickname);
+            model.setCurrent_destino(friend);
+            model.getCurrent_user().setDestino(friend);
+        } catch (Exception e) {
+            System.out.println("Error: set destino controller");
+        }
+
+    }
+    
     public void login() throws Exception{
         //crea un usuario lo busca en la base de datos, null o no
         Client cl = new Client();
@@ -46,10 +63,7 @@ public class Controller {
         cl.setNickname(view.getLogInNick().getText());
         
         
-        System.out.print("\n" + view.getLogInID().getText());//probando datos
-          
-        System.out.print("\n" + view.getLogInPass().getText());
-        
+
         
         Client islogged = ServiceProxy.getInstance().login(cl);
         
@@ -57,12 +71,16 @@ public class Controller {
         
         
         model.setCurrent_user(islogged);
-       
-        System.out.print("\nController fin, usuario asignado a model"+ model.getCurrent_user().getNickname());
+        if (model.getCurrent_user()!=null) {
+            System.out.println("Cliente no null dijo controller");
+            System.out.println(islogged.toString());
+            ServiceXml.getInstance().setClient(islogged);
+            ServiceXml.getInstance().store(islogged.getNickname());
+            ServiceXml.getInstance().load(islogged.getNickname());
+            model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
+        }
         
-        System.out.print("\nNickname: "+model.getCurrent_user().getNickname()+"\n");
-      
-        
+
         model.commit();
     }
     
@@ -82,7 +100,15 @@ public class Controller {
     public void deliver(String message){
         
         model.getMessages().add(message);
+        
         model.commit();    
+    }
+    
+    public void deliver(Mensaje msg) throws Exception{
+        model.getMessages().add(msg.getMensaje());
+        ServiceXml.getInstance().addMessage(msg);
+        
+        model.commit();
     }
     
     public void setActivos(List<Client> clients){
@@ -98,8 +124,19 @@ public class Controller {
         ServiceProxy.getInstance().giveClients(c);
     }
     
-    public void sendMSG(){
-        String msg = model.getCurrent_user().getNickname() + view.getPostmsg().getText();
+    public void sendMSG() throws Exception{
+        Mensaje msg = new Mensaje();
+        msg.setRemitente(model.getCurrent_user());
+        msg.setDestino(model.getCurrent_destino());
+        msg.setMensaje(model.getCurrent_user().getNickname()+" : "+view.getPostmsg().getText());
+        
+        deliver(msg.getMensaje());// se envia el mensaje a si mismo y se actualiza
+        
+        
+        
+        ServiceProxy.getInstance().post(msg);
+        ServiceXml.getInstance().addMessage(msg);
+        model.commit();
         
         
     }
@@ -109,6 +146,8 @@ public class Controller {
             Client c = new Client();
             c.setNickname(id);
             model.getActivos().add(c);
+            model.getCurrent_user().getFriends().add(c);
+            ServiceXml.getInstance().addFriend(c);
             model.commit();
         }
 
@@ -116,10 +155,51 @@ public class Controller {
     
     private boolean isDuplicated(String id){
         for (int i = 0; i < model.getActivos().size(); i++) {
-            if (id == model.getActivos().get(i).getId()) {
+            if (id == model.getActivos().get(i).getNickname()) {
                 return true;
             }
         }
         return false;
     }
+    
+    public Client getUser(){
+        return model.getCurrent_user();
+    }
+
+    
+
+
+    public void setCurrentChat(){
+        
+        
+        try {
+            
+            System.out.println("Controller : set current chat"); 
+            Client compa = model.getCurrent_destino();
+
+            Chat chat = model.getCurrent_user().getChatFriend(compa.getNickname());
+            System.out.println("Chat de compa encontrado");
+            if (chat!=null) {
+                List<String> msg = Collections.synchronizedList(new ArrayList<String>());
+                
+                for (int i = 0; i < chat.getChat().size(); i++) {
+                    String msgaux = chat.getChat().get(i).getMensaje();
+                    msg.add(msgaux);
+                }
+                
+                System.out.println("Lista de mensajes hecha");
+                model.setMessages(msg);
+               
+                model.commit();
+            }
+
+            
+        } catch (Exception e) {
+            System.out.println("Error set current chat try catch");
+        }
+        
+    }
+    
+    
+    
 }

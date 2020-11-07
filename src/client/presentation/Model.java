@@ -47,7 +47,7 @@ public class Model extends java.util.Observable {
 
     public void setCurrent_user(Client current_user) {
         this.current_user = current_user;
-        System.out.println("Usuario seteado");
+
     }
 
     public List<String> getMessages() {

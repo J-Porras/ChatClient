@@ -13,6 +13,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
@@ -28,6 +30,7 @@ public class ServiceProxy  implements IService{
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private Controller controller;
+    private Data data;
     private boolean continuar = true;
     
     
@@ -39,7 +42,9 @@ public class ServiceProxy  implements IService{
     }
     
     
-    ServiceProxy(){}
+    ServiceProxy(){
+        data = new Data();
+    }
     
     
     public void setController(Controller controller) {
@@ -75,8 +80,10 @@ public class ServiceProxy  implements IService{
                 {
                     case Protocol.DELIVER:
                         try {
-                            String message=(String)in.readObject();
-                            deliver(message);
+                            Mensaje msg = (Mensaje)in.readObject();
+                            
+                            deliver(msg);
+                            
                         } 
                         catch (ClassNotFoundException ex) 
                         {
@@ -128,7 +135,20 @@ public class ServiceProxy  implements IService{
             }
          }
       );
-   }
+    }
+    
+    private void deliver(final Mensaje msg){
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run(){
+                try {
+                    controller.deliver(msg);
+                } catch (Exception ex) {
+                    Logger.getLogger(ServiceProxy.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+         }
+      );
+    }
     
     private void deliverFriends(List<Client> friends){
         controller.setActivos(friends);
@@ -144,22 +164,16 @@ public class ServiceProxy  implements IService{
         this.disconnect();
     }
     
-    
-
-    @Override
-    public void signin(Client client) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 
     @Override
     public void giveClients(Client c) throws Exception {
         
         try {
-            System.out.println("Inside give Clients");
+
             out.writeInt(Protocol.REQ_USERS);
             out.writeObject(c);
             out.flush();
-            System.out.println("Give clients: Objeto flusheado");
         }
         catch (Exception e) {
         }
@@ -171,29 +185,28 @@ public class ServiceProxy  implements IService{
         connect();
 
         try {
-            System.out.println("\n" + "inside login");
+
             out.writeInt(Protocol.LOGIN);
             out.writeObject(client);
             out.flush();
-            System.out.println("\n" + "Objeto flusheado");
+  
             
             int response = in.readInt();
             
             if(response == Protocol.ERROR_NO_ERROR){
                 Client clienteIn =  (Client) in.readObject();
                 this.start();
-                System.out.println("\n" + "inside login y conectado");
+                data.setClient(client);
+                chatprotocol.XmlPersister.getInstance(client.getId());
                 return clienteIn;
                 
             }
             else{
                 disconnect();
-                System.out.println("\n" + "Cliente: Protocolo desconocido: " + Integer.toString(response));
                 throw new Exception("No se ha encontrado el usuario");
             } 
             
         } catch (Exception e) {
-            System.out.println("error try catch login");
             return null;
         }
     }
@@ -202,46 +215,37 @@ public class ServiceProxy  implements IService{
     public Client addFriend(Client c) throws Exception {
         
         try {
-            System.out.println("add friend override de cliente");
             out.writeInt(Protocol.ADD_USER);
             out.writeObject(c);
             out.flush(); 
             
-            System.out.println("cliente new friend flusheado");
             
             int response = in.readInt();
             
-            System.out.println("Server respueta: " + Integer.toString(response));
             
             if(response == Protocol.ERROR_NO_ERROR){
-                System.out.println("No error respuesta del server");
                 Client clienteIn =  (Client) in.readObject();
                 
                 return clienteIn;             
             }
             else{
-                System.out.println("Cliente: No se ha encontrado el usuario para agregar");
                 throw new Exception("No se ha encontrado el usuario para agregar");
             } 
             
         } catch (Exception e) {
-            System.out.println("error try catch new friend");
             return null;
         }
     }
 
     @Override
-    public void post(String msg,Client c) throws Exception {
+    public void post(Mensaje msg) throws Exception {
         try {
             out.writeInt(Protocol.MSG);
             out.writeObject(msg);
             out.flush();
-            
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
     }
 
-   
     
 }
