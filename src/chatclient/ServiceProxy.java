@@ -80,8 +80,9 @@ public class ServiceProxy  implements IService{
                 {
                     case Protocol.DELIVER:
                         try {
+                            System.out.println("\nProtocolo deliver\n");
                             Mensaje msg = (Mensaje)in.readObject();
-                            
+                            System.out.println("\nMENSAJE PARSEADO DE VUELTA\n");
                             deliver(msg);
                             
                         } 
@@ -133,6 +134,7 @@ public class ServiceProxy  implements IService{
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
                 try {
+                    System.out.println("\ntrying to deliver to controller\n");
                     controller.deliver(msg);
                 } catch (Exception ex) {
                     Logger.getLogger(ServiceProxy.class.getName()).log(Level.SEVERE, null, ex);
@@ -235,6 +237,7 @@ public class ServiceProxy  implements IService{
         try {
             out.writeInt(Protocol.MSG);
             out.writeObject(msg);
+            System.out.println("Objeto Mensaje escrito");
             out.flush();
         } catch (Exception e) {
         }

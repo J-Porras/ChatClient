@@ -103,7 +103,7 @@ public class Controller {
         model.setMessages(new ArrayList<String>());
         model.commit();
     }
-    
+    //AFK  comiendo
     
     public void deliver(String message){
         
@@ -113,9 +113,10 @@ public class Controller {
     }
     
     public void deliver(Mensaje msg) throws Exception{
+        System.out.println("\nController: deliver mensaje\n");
         model.getMessages().add(msg.getMensaje());
-        ServiceXml.getInstance().addMessage(msg);
-        
+        //ServiceXml.getInstance().addMessage(msg);
+        System.out.println("\nController:  mensaje añadido a la lista total de msgs, proximo a commit\n");
         model.commit();
     }
     
@@ -143,7 +144,7 @@ public class Controller {
         
         
         ServiceProxy.getInstance().post(msg);
-        ServiceXml.getInstance().addMessage(msg);
+       // ServiceXml.getInstance().addMessage(msg);
         model.commit();
         
         

@@ -88,7 +88,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             chatPanel.setVisible(true);
             
             if (model.getCurrent_destino()!=null) {
-                this.setTitle("Usuario: " + model.getCurrent_user().getNombre()+ "Chateando con " + 
+                this.setTitle("Usuario: " + model.getCurrent_user().getNombre()+ ",  chateando con: " + 
                 model.getCurrent_destino().getNickname());
                 String msg = "";
                 for( String m: model.getMessages()){
