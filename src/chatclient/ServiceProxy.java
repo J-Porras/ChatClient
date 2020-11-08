@@ -9,6 +9,8 @@ import client.presentation.Controller;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -193,6 +195,7 @@ public class ServiceProxy  implements IService{
                 data.setClient(client);
                 chatprotocol.XmlPersister.getInstance(client.getId());
                 System.out.println("Cliente encontrado desde database");
+                clienteIn.setIsonline(true);
                 return clienteIn;
                 
             }
@@ -240,8 +243,16 @@ public class ServiceProxy  implements IService{
             out.writeObject(msg);
             
             System.out.println("Objeto Mensaje escrito");
+            System.out.println("****************************************");
             out.flush();
         } catch (Exception e) {
+            System.out.println("*****************************************");
+            System.out.println("Error post Serviceproxy");
+            System.out.println("****************************************");
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String exceptionDetails = sw.toString();
+            System.out.println(exceptionDetails);
         }
     }
 

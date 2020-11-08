@@ -65,7 +65,6 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         if (model.getCurrent_user() ==null) {
             
             System.out.println("cliente null dijo el view");
-            Client c = controller.getUser();
             //System.out.println(c.getPassword());
             chatPanel.setVisible(false);
             this.controller.increseAttempts();
@@ -196,7 +195,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         chatArea = new java.awt.TextArea();
         postmsg = new javax.swing.JTextField();
         postBtn = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        logOut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -351,10 +350,10 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             }
         });
 
-        jButton1.setText("Log out");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        logOut.setText("Log out");
+        logOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                logOutActionPerformed(evt);
             }
         });
 
@@ -379,7 +378,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(addFriend)
                                 .addGap(56, 56, 56)
-                                .addComponent(jButton1))
+                                .addComponent(logOut))
                             .addGroup(chatPanelLayout.createSequentialGroup()
                                 .addComponent(postmsg)
                                 .addGap(18, 18, 18)
@@ -395,7 +394,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                     .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addFriend)
                     .addComponent(jLabel11)
-                    .addComponent(jButton1))
+                    .addComponent(logOut))
                 .addGap(24, 24, 24)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -506,10 +505,11 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         
     }//GEN-LAST:event_tableOnlineMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
         // TODO add your handling code here:
+        controller.logout();
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_logOutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -554,7 +554,6 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private javax.swing.JButton addFriend;
     private java.awt.TextArea chatArea;
     private javax.swing.JPanel chatPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -569,6 +568,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private javax.swing.JTextField logInNick;
     private javax.swing.JTextField logInNombre;
     private javax.swing.JTextField logInPas;
+    private javax.swing.JButton logOut;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JButton postBtn;
     private javax.swing.JTextField postmsg;

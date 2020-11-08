@@ -81,11 +81,11 @@ public class Controller {
         
         model.setCurrent_user(islogged);
         if (model.getCurrent_user()!=null) {
+            
+            ServiceXml.getInstance().setData(XmlPersister.getInstance(model.getCurrent_user().getId()).load());
+            
             System.out.println(islogged.toString());
      
-            ServiceXml.getInstance().setClient(islogged);
-            ServiceXml.getInstance().store(islogged.getNickname());
-            ServiceXml.getInstance().load(islogged.getNickname());
             model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
         }
         
@@ -95,18 +95,22 @@ public class Controller {
     
     
     public void logout(){
+        this.attempts = 1;
         try {
+            XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
             ServiceProxy.getInstance().logout(model.getCurrent_user());
         }
         catch (Exception ex) {}
+       
         model.setCurrent_user(null);
         model.setMessages(new ArrayList<String>());
+        
         model.commit();
     }
-    //AFK  comiendo
+    //AFK  comiendo, haga pull
     
     public void deliver(String message){
-        
+        System.out.println("******CONTROLLER DELIVER");
         model.getMessages().add(message);
         
         model.commit();    
@@ -115,8 +119,12 @@ public class Controller {
     public void deliver(Mensaje msg) throws Exception{
         System.out.println("\nController: deliver mensaje\n");
         model.getMessages().add(msg.getMensaje());
+        Client actual = model.getCurrent_user();
+        Chat c = actual.getChatFriend(actual.getDestino().getNickname());
+        c.addMsg(msg);
+        
         //ServiceXml.getInstance().addMessage(msg);
-        System.out.println("\nController:  mensaje añadido a la lista total de msgs, proximo a commit\n");
+        System.out.println("\n*********************Controller:  mensaje añadido a la lista total de msgs, proximo a commit\n");
         model.commit();
     }
     
@@ -138,13 +146,16 @@ public class Controller {
         msg.setRemitente(model.getCurrent_user());
         msg.setDestino(model.getCurrent_destino());
         msg.setMensaje(model.getCurrent_user().getNickname()+" : "+view.getPostmsg().getText());
+        System.out.println("**********Mensaje creado");
         
         deliver(msg.getMensaje());// se envia el mensaje a si mismo y se actualiza
         
-        
+        Client actual = model.getCurrent_user();
+        Chat c = actual.getChatFriend(actual.getDestino().getNickname());
+        c.addMsg(msg);
         
         ServiceProxy.getInstance().post(msg);
-       //ServiceXml.getInstance().addMessage(msg);
+        //ServiceXml.getInstance().addMessage(msg);
         model.commit();
         
         
@@ -155,8 +166,9 @@ public class Controller {
         Client c = new Client();
         c.setNickname(id);
         model.getCurrent_user().addFriend(c);
+        //ServiceXml.getInstance().store(model.getCurrent_user());
         model.getActivos().add(c);
-        ServiceXml.getInstance().addFriend(c);
+        
         model.commit();
     }
     
