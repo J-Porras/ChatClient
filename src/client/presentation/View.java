@@ -494,6 +494,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         
         try {
             String idfriend = this.tableOnline.getValueAt(tableOnline.getSelectedRow(), 0).toString();
+            System.out.println("- - - - - - - - - - - - - - - -- ");
             System.out.println("despues de id friend");
             System.out.println("Nickname captado: " + idfriend);
             controller.setDestino(idfriend);

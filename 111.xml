@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><data><client><id>111</id><password>test</password><nombre>test</nombre><nickname>test</nickname><isonline>true</isonline></client></data>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><data><client><id>111</id><password>test</password><nombre>test</nombre><nickname>test</nickname><friends><id>-</id><password>-</password><nombre>-</nombre><nickname>test2</nickname><isonline>false</isonline></friends><isonline>true</isonline></client></data>

@@ -150,26 +150,16 @@ public class Controller {
     }
     
     public void addFriend(String id) throws Exception{
-        if (!this.isDuplicated(id)) {
-            Client c = new Client();
-            c.setNickname(id);
-            model.getActivos().add(c);
-            model.getCurrent_user().getFriends().add(c);
-            ServiceXml.getInstance().addFriend(c);
-            model.commit();
-        }
+        
+        Client c = new Client();
+        c.setNickname(id);
+        model.getCurrent_user().addFriend(c);
+        model.getActivos().add(c);
+        ServiceXml.getInstance().addFriend(c);
+        model.commit();
+    }
+    
 
-    }
-    
-    private boolean isDuplicated(String id){
-        for (int i = 0; i < model.getActivos().size(); i++) {
-            if (id == model.getActivos().get(i).getNickname()) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     public Client getUserController(){
         return model.getCurrent_user();
     }
@@ -186,8 +176,9 @@ public class Controller {
             Client compa = model.getCurrent_destino();
 
             Chat chat = model.getCurrent_user().getChatFriend(compa.getNickname());
-            System.out.println("Chat de compa encontrado");
+            
             if (chat!=null) {
+                System.out.println("Chat de compa encontrado");
                 List<String> msg = Collections.synchronizedList(new ArrayList<String>());
                 
                 for (int i = 0; i < chat.getChat().size(); i++) {
@@ -198,9 +189,9 @@ public class Controller {
                 System.out.println("Lista de mensajes hecha");
                 model.setMessages(msg);
                
-                model.commit();
+                
             }
-
+            model.commit();
             
         } catch (Exception e) {
             System.out.println("Error set current chat try catch");
