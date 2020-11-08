@@ -144,7 +144,7 @@ public class Controller {
         
         
         ServiceProxy.getInstance().post(msg);
-       // ServiceXml.getInstance().addMessage(msg);
+       //ServiceXml.getInstance().addMessage(msg);
         model.commit();
         
         

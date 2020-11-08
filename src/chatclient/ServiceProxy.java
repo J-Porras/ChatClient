@@ -234,9 +234,11 @@ public class ServiceProxy  implements IService{
 
     @Override
     public void post(Mensaje msg) throws Exception {
-        try {
+        try { 
+            System.out.println(msg.getMensaje());
             out.writeInt(Protocol.MSG);
             out.writeObject(msg);
+            
             System.out.println("Objeto Mensaje escrito");
             out.flush();
         } catch (Exception e) {

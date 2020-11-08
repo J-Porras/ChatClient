@@ -44,7 +44,8 @@ public class ServiceXml {
     
     public void addMessage(Mensaje msg) throws Exception{
         Client c = data.getClient();
-        Chat chat = c.getChatFriend(msg.getDestino().getNickname());
+        Chat chat;
+        chat = c.getChatFriend(msg.getDestino().getNickname());
         chat.addMsg(msg);
         store(msg.getRemitente().getId());
 
