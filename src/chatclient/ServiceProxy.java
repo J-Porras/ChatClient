@@ -128,15 +128,7 @@ public class ServiceProxy  implements IService{
         skt.close();
     }
     
-    private void deliver( final String  message){
-      SwingUtilities.invokeLater(new Runnable(){
-            public void run(){
-               controller.deliver(message);
-            }
-         }
-      );
-    }
-    
+
     private void deliver(final Mensaje msg){
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
@@ -198,6 +190,7 @@ public class ServiceProxy  implements IService{
                 this.start();
                 data.setClient(client);
                 chatprotocol.XmlPersister.getInstance(client.getId());
+                System.out.println("Cliente encontrado desde database");
                 return clienteIn;
                 
             }

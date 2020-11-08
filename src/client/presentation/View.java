@@ -7,12 +7,13 @@ package client.presentation;
 
 import chatprotocol.Client;
 import java.awt.Color;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -31,6 +32,8 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     
     Controller controller;
     Model model;
+    Client current;
+    
     
     
     public void setModel(Model model){
@@ -42,17 +45,31 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     public void setController(Controller controller){
         this.controller = controller;
     }
-    
 
+    public Client getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Client current) {
+        this.current = current;
+    }
+    
+    
     
     @Override
     public void update(Observable o, Object arg) {
+        
+        current = controller.getUser();
         System.out.println("veces en update: " + Integer.toString(controller.getAttempts()));
         
-        if (this.controller.getUser() == null) {
+        if (current ==null) {
+            
             System.out.println("cliente null dijo el view");
+            Client c = controller.getUser();
+            //System.out.println(c.getPassword());
             chatPanel.setVisible(false);
             this.controller.increseAttempts();
+            
             if (this.controller.getAttempts() > 1) {
                 loginPanel.setVisible(true);
                 //loginPanel.setLocale(null);
@@ -86,9 +103,11 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             this.postmsg.requestFocus();
             
         }
+        
         if (!model.getActivos().isEmpty()) {
             this.tableOnline.setModel(new ClientsJTable(model.getActivos()));
         }
+
         
         this.validate();
     }
@@ -412,14 +431,18 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         try {
-            this.controller.login();
-            this.logInID.setText("");
-            this.logInPas.setText("");
+            current = this.controller.login();
+            //this.logInID.setText("");
+            //this.logInPas.setText("");
             
             
             
             
         } catch (Exception e) {
+            StringWriter  str = new StringWriter();
+            e.printStackTrace(new PrintWriter(str));
+            String s = str.toString();
+            System.out.println(s);
             this.logInID.setBackground(Color.red);
             this.logInPas.setBackground(Color.red);
         }

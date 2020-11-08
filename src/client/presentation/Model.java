@@ -14,6 +14,7 @@ import java.util.List;
  *
  * @author Porras
  */
+
 public class Model extends java.util.Observable {
     private Client current_user;
     private List<String> messages;

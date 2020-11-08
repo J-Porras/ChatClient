@@ -21,6 +21,7 @@ public class Controller {
     private Model model;
     private ServiceProxy localService;
     private int attempts = 0;
+    private Client user;
     
     public Controller(View view, Model model) {
         this.view = view;
@@ -39,6 +40,10 @@ public class Controller {
         return this.attempts;
     }
     
+    public Client getUser(){
+        return this.user;
+    }
+    
     public void setDestino(String nickname){
         
         
@@ -54,7 +59,7 @@ public class Controller {
 
     }
     
-    public void login() throws Exception{
+    public Client login() throws Exception{
         //crea un usuario lo busca en la base de datos, null o no
         Client cl = new Client();
         cl.setId(view.getLogInID().getText());
@@ -66,22 +71,26 @@ public class Controller {
 
         
         Client islogged = ServiceProxy.getInstance().login(cl);
+        this.user = islogged;
+        this.view.setCurrent(user);
         
-        
+        System.out.println("Cliente no null dijo controller");
+        System.out.println(islogged.getId());
+        System.out.println(islogged.getPassword());
         
         
         model.setCurrent_user(islogged);
         if (model.getCurrent_user()!=null) {
-            System.out.println("Cliente no null dijo controller");
             System.out.println(islogged.toString());
+     
             ServiceXml.getInstance().setClient(islogged);
             ServiceXml.getInstance().store(islogged.getNickname());
             ServiceXml.getInstance().load(islogged.getNickname());
             model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
         }
         
-
-        model.commit();
+        return islogged;
+        //model.commit();
     }
     
     
@@ -162,7 +171,7 @@ public class Controller {
         return false;
     }
     
-    public Client getUser(){
+    public Client getUserController(){
         return model.getCurrent_user();
     }
 
