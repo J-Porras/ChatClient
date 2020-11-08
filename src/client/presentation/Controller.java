@@ -59,7 +59,7 @@ public class Controller {
 
     }
     
-    public Client login() throws Exception{
+    public void login() throws Exception{
         //crea un usuario lo busca en la base de datos, null o no
         Client cl = new Client();
         cl.setId(view.getLogInID().getText());
@@ -89,8 +89,7 @@ public class Controller {
             model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
         }
         
-        return islogged;
-        //model.commit();
+        model.commit();
     }
     
     

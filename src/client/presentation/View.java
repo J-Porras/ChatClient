@@ -62,7 +62,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         current = controller.getUser();
         System.out.println("veces en update: " + Integer.toString(controller.getAttempts()));
         
-        if (current ==null) {
+        if (model.getCurrent_user() ==null) {
             
             System.out.println("cliente null dijo el view");
             Client c = controller.getUser();
@@ -89,18 +89,23 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             
             if (model.getCurrent_destino()!=null) {
                 this.setTitle("Usuario: " + model.getCurrent_user().getNombre()+ "Chateando con " + 
-                        model.getCurrent_destino().getNickname());
-            }
-                    
-            this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
-            String msg = "";
-            for( String m: model.getMessages()){
-                msg+=(m +"\n");
+                model.getCurrent_destino().getNickname());
+                String msg = "";
+                for( String m: model.getMessages()){
+                    msg+=(m +"\n");
+                    this.chatArea.setText(msg);
+                }
                 this.chatArea.setText(msg);
+                this.postmsg.setText("");
+                this.postmsg.requestFocus();
             }
-            this.chatArea.setText(msg);
-            this.postmsg.setText("");
-            this.postmsg.requestFocus();
+            else{
+                this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
+            }    
+                    
+            
+            
+            
             
         }
         
@@ -431,9 +436,9 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         try {
-            current = this.controller.login();
-            //this.logInID.setText("");
-            //this.logInPas.setText("");
+            this.controller.login();
+            this.logInID.setText("");
+            this.logInPas.setText("");
             
             
             
