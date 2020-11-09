@@ -61,11 +61,8 @@ public class Controller {
     
     public void login() throws Exception{
         //crea un usuario lo busca en la base de datos, null o no
-        Client cl = new Client();
-        cl.setId(view.getLogInID().getText());
-        cl.setPassword(view.getLogInPass().getText());
-        cl.setNombre(view.getLogInNombre().getText());
-        cl.setNickname(view.getLogInNick().getText());
+        Client cl = new Client(view.getLogInID().getText(),view.getLogInPass().getText(),view.getLogInNombre().getText(),view.getLogInNick().getText());
+       cl.setIsonline(true);
         
         
 
@@ -86,7 +83,15 @@ public class Controller {
             
             System.out.println(islogged.toString());
      
-            model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
+          //  model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
+             //  cl.setId(view.getLogInID().getText());
+       // model.getCurrent_user().setPassword(view.getLogInPass().getText());
+         //model.getCurrent_user().setNombre(view.getLogInNombre().getText());
+        // model.getCurrent_user().setNickname(view.getLogInNick().getText());
+        ServiceXml.getInstance().setClient(model.getCurrent_user());
+        System.out.println("compa");
+     //   System.out.println(model.getCurrent_user().getDestino().getNickname());
+           // XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
         }
         
         model.commit();
@@ -97,6 +102,7 @@ public class Controller {
     public void logout(){
         this.attempts = 1;
         try {
+            ServiceXml.getInstance().setClient(model.getCurrent_user());
             XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
             ServiceProxy.getInstance().logout(model.getCurrent_user());
         }
@@ -168,7 +174,7 @@ public class Controller {
         model.getCurrent_user().addFriend(c);
         //ServiceXml.getInstance().store(model.getCurrent_user());
         model.getActivos().add(c);
-        
+        XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
         model.commit();
     }
     
@@ -180,17 +186,17 @@ public class Controller {
     
 
 
-    public void setCurrentChat(){
+    public void setCurrentChat(String nickname){
         
         
         try {
             
-            System.out.println("Controller : set current chat"); 
-            Client compa = model.getCurrent_destino();
-
-            Chat chat = model.getCurrent_user().getChatFriend(compa.getNickname());
+            System.out.println("Controller : set current chat y cantidad"); 
+            //Client compa = model.getCurrent_destino();
+            System.out.println(model.getCurrent_user().getChats().size()); 
+            Chat chat = model.getCurrent_user().getChatFriend(nickname);
             
-            if (chat!=null) {
+            if (chat!=null) {//
                 System.out.println("Chat de compa encontrado");
                 List<String> msg = Collections.synchronizedList(new ArrayList<String>());
                 

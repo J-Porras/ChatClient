@@ -497,7 +497,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             System.out.println("despues de id friend");
             System.out.println("Nickname captado: " + idfriend);
             controller.setDestino(idfriend);
-            controller.setCurrentChat();
+            controller.setCurrentChat(idfriend);
         } catch (Exception e) {
             System.out.println("Error captado en view ");
         }
