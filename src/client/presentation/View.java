@@ -455,6 +455,10 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
         // TODO add your handling code here:
+        if(!model.getCurrent_user().getIsonline()){
+       
+        controller.logout();
+        }
         System.exit(0);
     }//GEN-LAST:event_ExitActionPerformed
 
