@@ -42,7 +42,7 @@ public class ServiceXml {
         System.out.println("");
         Client c = data.getClient();
         Chat chat;
-        chat = c.getChatFriend(msg.getDestino().getNickname());
+        chat = c.getChatFriend(msg.getDestino());
         chat.addMsg(msg);
         store(data.getClient());  
     }
@@ -55,7 +55,7 @@ public class ServiceXml {
     public Chat getChatFriend(Client c){
         System.out.println("Chat protocol get chat friend");
         for (int i = 0; i < this.data.getClient().getChats().size(); i++) {
-            if (this.data.getClient().getChats().get(i).getDestino().getNickname()== c.getNickname()) {
+            if (this.data.getClient().getChats().get(i).getDestino()== c.getNickname()) {
                 System.out.println("OJO: chat encontrado");
                 return this.data.getClient().getChats().get(i);
             }
@@ -65,9 +65,9 @@ public class ServiceXml {
     }
     
     public void addMsgtoChat(Mensaje msg){
-        Client destino = msg.getDestino();
+       // Client destino = msg.getDestino();
         for (int i = 0; i < this.data.getClient().getChats().size(); i++) {
-            if (this.data.getClient().getChats().get(i).getDestino().getNickname() == destino.getNickname()) {
+            if (this.data.getClient().getChats().get(i).getDestino() == msg.getDestino()) {
                 this.data.getClient().getChats().get(i).getChat().add(msg);
                 break;
             }

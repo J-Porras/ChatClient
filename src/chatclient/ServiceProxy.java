@@ -192,8 +192,8 @@ public class ServiceProxy  implements IService{
             if(response == Protocol.ERROR_NO_ERROR){
                 Client clienteIn =  (Client) in.readObject();
                 this.start();
-                data.setClient(client);
-                chatprotocol.XmlPersister.getInstance(client.getId());
+             // data.setClient(client);
+                //chatprotocol.XmlPersister.getInstance(client.getId());
                 System.out.println("Cliente encontrado desde database");
                 clienteIn.setIsonline(true);
                 return clienteIn;

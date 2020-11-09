@@ -88,7 +88,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
             
             if (model.getCurrent_destino()!=null) {
                 this.setTitle("Usuario: " + model.getCurrent_user().getNombre()+ ",  chateando con: " + 
-                model.getCurrent_destino().getNickname());
+                model.getCurrent_destino());
                 String msg = "";
                 for( String m: model.getMessages()){
                     msg+=(m +"\n");
@@ -97,6 +97,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 this.chatArea.setText(msg);
                 this.postmsg.setText("");
                 this.postmsg.requestFocus();
+                this.tableOnline.setModel(new ClientsJTable(model.getActivos()));
             }
             else{
                 this.setTitle("Usuario: " + model.getCurrent_user().getNombre());

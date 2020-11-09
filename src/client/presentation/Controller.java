@@ -51,8 +51,8 @@ public class Controller {
         try {
             System.out.println("Controller: set destino");
             Client friend = model.getCurrent_user().findFriend(nickname);
-            model.setCurrent_destino(friend);
-            model.getCurrent_user().setDestino(friend);
+            model.setCurrent_destino(friend.getNickname());
+          //  model.getCurrent_user().setDestino(friend);
         } catch (Exception e) {
             System.out.println("Error: set destino controller");
         }
@@ -61,13 +61,13 @@ public class Controller {
     
     public void login() throws Exception{
         //crea un usuario lo busca en la base de datos, null o no
-        Client cl = new Client(view.getLogInID().getText(),view.getLogInPass().getText(),view.getLogInNombre().getText(),view.getLogInNick().getText());
-       cl.setIsonline(true);
+        Client islogged = new Client(view.getLogInID().getText(),view.getLogInPass().getText(),view.getLogInNombre().getText(),view.getLogInNick().getText());
+       islogged.setIsonline(true);
         
         
 
         
-        Client islogged = ServiceProxy.getInstance().login(cl);
+         islogged = ServiceProxy.getInstance().login(islogged);
         this.user = islogged;
         this.view.setCurrent(user);
         
@@ -79,16 +79,25 @@ public class Controller {
         model.setCurrent_user(islogged);
         if (model.getCurrent_user()!=null) {
             
-            ServiceXml.getInstance().setData(XmlPersister.getInstance(model.getCurrent_user().getId()).load());
-            
+            ServiceXml.getInstance().setData(XmlPersister.getInstance(model.getCurrent_user().getId()).load()); 
+            model.setCurrent_user(ServiceXml.getInstance().getData().getClient());
+           if("N/A".equals(model.getCurrent_user().getId())){
+           model.setCurrent_user(islogged);
+           }
+            ServiceXml.getInstance().setClient(model.getCurrent_user()); 
+            model.setActivos(model.getCurrent_user().getFriends());
+            System.out.println("Cantidad de Chats:");
+            System.out.println(model.getCurrent_user().getChats().size());
+             System.out.println("Cantidad de Amigos:");
+            System.out.println(model.getCurrent_user().getFriends().size());
             System.out.println(islogged.toString());
-     
+     model.commit();
           //  model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
              //  cl.setId(view.getLogInID().getText());
        // model.getCurrent_user().setPassword(view.getLogInPass().getText());
          //model.getCurrent_user().setNombre(view.getLogInNombre().getText());
         // model.getCurrent_user().setNickname(view.getLogInNick().getText());
-        ServiceXml.getInstance().setClient(model.getCurrent_user());
+     
         System.out.println("compa");
      //   System.out.println(model.getCurrent_user().getDestino().getNickname());
            // XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
@@ -126,12 +135,12 @@ public class Controller {
         System.out.println("\nController: deliver mensaje\n");
         model.getMessages().add(msg.getMensaje());
         Client actual = model.getCurrent_user();
-        Chat c = actual.getChatFriend(actual.getDestino().getNickname());
+        Chat c = actual.getChatFriend(model.getCurrent_destino());
         c.addMsg(msg);
-        
+          model.commit();
         //ServiceXml.getInstance().addMessage(msg);
         System.out.println("\n*********************Controller:  mensaje añadido a la lista total de msgs, proximo a commit\n");
-        model.commit();
+      
     }
     
     public void setActivos(List<Client> clients){
@@ -149,15 +158,15 @@ public class Controller {
     
     public void sendMSG() throws Exception{
         Mensaje msg = new Mensaje();
-        msg.setRemitente(model.getCurrent_user());
-        msg.setDestino(model.getCurrent_destino());
+        msg.setRemitente(model.getCurrent_user().getNickname());
+       msg.setDestino(model.getCurrent_destino());
         msg.setMensaje(model.getCurrent_user().getNickname()+" : "+view.getPostmsg().getText());
         System.out.println("**********Mensaje creado");
         
         deliver(msg.getMensaje());// se envia el mensaje a si mismo y se actualiza
         
         Client actual = model.getCurrent_user();
-        Chat c = actual.getChatFriend(actual.getDestino().getNickname());
+        Chat c = actual.getChatFriend(model.getCurrent_destino());
         c.addMsg(msg);
         
         ServiceProxy.getInstance().post(msg);
@@ -173,7 +182,7 @@ public class Controller {
         c.setNickname(id);
         model.getCurrent_user().addFriend(c);
         //ServiceXml.getInstance().store(model.getCurrent_user());
-        model.getActivos().add(c);
+      //  model.getActivos().add(c);
         XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
         model.commit();
     }
