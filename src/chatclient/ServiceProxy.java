@@ -95,9 +95,9 @@ public class ServiceProxy  implements IService{
                     
                     case Protocol.ON_USERS:
                         try {
-                            List<Client> friends = Collections.synchronizedList(new ArrayList<Client>());
-                            friends = (List<Client>) in.readObject();
-                            deliverFriends(friends);
+                            System.out.println("Devuelve Users");
+                            List<Client> onUsers = (List<Client>) in.readObject();
+                            controller.setStateFriends(onUsers);
                             
                         }
                         catch (Exception e) {
@@ -115,6 +115,8 @@ public class ServiceProxy  implements IService{
             }                        
         }//fin while(continuar)
     }
+    
+    
 
     
     
@@ -146,9 +148,7 @@ public class ServiceProxy  implements IService{
       );
     }
     
-    private void deliverFriends(List<Client> friends){
-        controller.setActivos(friends);
-    }
+
 
 
     @Override
@@ -196,6 +196,11 @@ public class ServiceProxy  implements IService{
                 //chatprotocol.XmlPersister.getInstance(client.getId());
                 System.out.println("Cliente encontrado desde database");
                 clienteIn.setIsonline(true);
+                
+                //ResponseOnlineUsers();
+                
+                
+                
                 return clienteIn;
                 
             }
@@ -207,6 +212,16 @@ public class ServiceProxy  implements IService{
         } catch (Exception e) {
             return null;
         }
+    }
+    
+    public void ResponseOnlineUsers() throws Exception{
+        out.writeInt(Protocol.IM_ONLINE);
+        //out.writeObject(client);
+        System.out.println("-------------------------------------");
+        System.out.println("-online user get");
+        out.flush();
+         
+                
     }
 
     @Override
@@ -254,6 +269,22 @@ public class ServiceProxy  implements IService{
             String exceptionDetails = sw.toString();
             System.out.println(exceptionDetails);
         }
+    }
+
+    @Override
+    public List<Client> OnlineUsers(List<Client> list) throws Exception {
+        List<Client> friends = Collections.synchronizedList(new ArrayList<Client>());
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j <ServiceXml.getInstance().getData().getClient().getFriends().size() ; j++) {
+                if (list.get(i).getNickname().equals(ServiceXml.getInstance().getData().getClient().getFriends().get(j).getNickname())) 
+                {
+                    friends.add(list.get(i));
+                    
+                }
+            }
+            
+        }
+        return friends;
     }
 
     

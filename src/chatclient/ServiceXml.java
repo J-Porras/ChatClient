@@ -9,6 +9,9 @@ import chatprotocol.Chat;
 import chatprotocol.Client;
 import chatprotocol.Data;
 import chatprotocol.Mensaje;
+import chatprotocol.Protocol;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -91,5 +94,5 @@ public class ServiceXml {
         
         data.setClient(c);
     }
-            
+   
 }

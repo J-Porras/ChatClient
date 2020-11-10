@@ -5,8 +5,10 @@
  */
 package client.presentation;
 
+import chatclient.ServiceXml;
 import chatprotocol.Client;
 import java.awt.Color;
+import java.awt.event.WindowEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Observable;
@@ -14,6 +16,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JFrame;
+import java.awt.Button;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  *
@@ -33,6 +40,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
     Controller controller;
     Model model;
     Client current;
+    
     
     
     
@@ -97,7 +105,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 this.chatArea.setText(msg);
                 this.postmsg.setText("");
                 this.postmsg.requestFocus();
-                this.tableOnline.setModel(new ClientsJTable(model.getActivos()));
+                //this.tableOnline.setModel(new ClientsJTable(model.getAllFriends()));
             }
             else{
                 this.setTitle("Usuario: " + model.getCurrent_user().getNombre());
@@ -199,6 +207,11 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
         logOut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Corbel Light", 1, 36)); // NOI18N
         jLabel1.setText("What's Upp");
@@ -302,18 +315,18 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
         tableOnline.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Usuarios"
+                "Usuarios", "Estado"
             }
         ));
         tableOnline.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -370,21 +383,25 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(chatPanelLayout.createSequentialGroup()
                         .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11))
-                        .addGap(25, 25, 25)
-                        .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(chatPanelLayout.createSequentialGroup()
-                                .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(addFriend)
-                                .addGap(56, 56, 56)
-                                .addComponent(logOut))
-                            .addGroup(chatPanelLayout.createSequentialGroup()
-                                .addComponent(postmsg)
-                                .addGap(18, 18, 18)
-                                .addComponent(postBtn))
-                            .addComponent(chatArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel11)
+                                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(chatPanelLayout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtNewFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(addFriend)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
+                                        .addComponent(logOut))
+                                    .addGroup(chatPanelLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(postBtn))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(postmsg, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(chatArea, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18))))
         );
         chatPanelLayout.setVerticalGroup(
@@ -418,7 +435,7 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
                 .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -455,9 +472,9 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
         // TODO add your handling code here:
-        if(!model.getCurrent_user().getIsonline()){
+        if(model.getCurrent_user() !=null  ){
        
-        controller.logout();
+            controller.logout();
         }
         System.exit(0);
     }//GEN-LAST:event_ExitActionPerformed
@@ -512,9 +529,19 @@ public class View extends javax.swing.JFrame implements java.util.Observer {
 
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
         // TODO add your handling code here:
+        
         controller.logout();
         
     }//GEN-LAST:event_logOutActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        if (ServiceXml.getInstance().getData().getClient()!=null) {
+            controller.logout();
+        }
+        System.exit(0);
+         
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments

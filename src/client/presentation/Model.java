@@ -18,7 +18,8 @@ import java.util.List;
 public class Model extends java.util.Observable {
     private Client current_user;
     private List<String> messages;
-    private List<Client> activos;
+    private List<Client> activos;//TODOS NO SOLO ACTIVOS
+    private List<Client> allFriends;
     private ClientsJTable jtableclients;
     private String current_destino;
     
@@ -30,6 +31,18 @@ public class Model extends java.util.Observable {
        jtableclients  = new ClientsJTable();
        
     }
+
+    public List<Client> getAllFriends() {
+        return allFriends;
+    }
+
+    public void setAllFriends(List<Client> allFriends) {
+        System.out.println("MODEL SET ALL FRIENDS STATE");
+        this.allFriends = allFriends;
+    }
+    
+    
+    
 
     public String getCurrent_destino() {
         return current_destino;
@@ -93,6 +106,22 @@ public class Model extends java.util.Observable {
         this.setChanged();
         this.notifyObservers();        
     } 
+    
+    public void fixList(){
+        for (int j = 0; j < this.activos.size(); j++) {
+            activos.get(j).setIsonline(false);
+        }
+        for (int j = 0; j < this.activos.size(); j++) {
+                for (int i = 0; i < allFriends.size(); i++) {
+                    if (activos.get(j).getNickname().equals(allFriends.get(i).getNickname())) {
+                        activos.get(j).setIsonline(true);
+                        break;
+                    }
+                    
+                }
+        }
+        
+    }
     
     
     

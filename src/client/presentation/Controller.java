@@ -62,46 +62,46 @@ public class Controller {
     public void login() throws Exception{
         //crea un usuario lo busca en la base de datos, null o no
         Client islogged = new Client(view.getLogInID().getText(),view.getLogInPass().getText(),view.getLogInNombre().getText(),view.getLogInNick().getText());
-       islogged.setIsonline(true);
+        islogged.setIsonline(true);
         
         
 
         
-         islogged = ServiceProxy.getInstance().login(islogged);
+        islogged = ServiceProxy.getInstance().login(islogged);
         this.user = islogged;
         this.view.setCurrent(user);
         
-        System.out.println("Cliente no null dijo controller");
+        
         System.out.println(islogged.getId());
         System.out.println(islogged.getPassword());
         
         
         model.setCurrent_user(islogged);
         if (model.getCurrent_user()!=null) {
-            
+            System.out.println("Cliente no null dijo controller");
             ServiceXml.getInstance().setData(XmlPersister.getInstance(model.getCurrent_user().getId()).load()); 
             model.setCurrent_user(ServiceXml.getInstance().getData().getClient());
-           if("N/A".equals(model.getCurrent_user().getId())){
-           model.setCurrent_user(islogged);
-           }
+            if("N/A".equals(model.getCurrent_user().getId())){
+                model.setCurrent_user(islogged);
+            }
             ServiceXml.getInstance().setClient(model.getCurrent_user()); 
             model.setActivos(model.getCurrent_user().getFriends());
             System.out.println("Cantidad de Chats:");
             System.out.println(model.getCurrent_user().getChats().size());
-             System.out.println("Cantidad de Amigos:");
+            System.out.println("Cantidad de Amigos:");
             System.out.println(model.getCurrent_user().getFriends().size());
             System.out.println(islogged.toString());
-     model.commit();
-          //  model.setActivos(ServiceXml.getInstance().getData().getClient().getFriends());
-             //  cl.setId(view.getLogInID().getText());
-       // model.getCurrent_user().setPassword(view.getLogInPass().getText());
-         //model.getCurrent_user().setNombre(view.getLogInNombre().getText());
-        // model.getCurrent_user().setNickname(view.getLogInNick().getText());
+            ServiceProxy.getInstance().ResponseOnlineUsers();
+            
+            
+            model.commit();
+
      
-        System.out.println("compa");
-     //   System.out.println(model.getCurrent_user().getDestino().getNickname());
-           // XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
+            System.out.println("compa");
+    
         }
+        else
+            System.out.println("Cliente  null dijo controller");
         
         model.commit();
     }
@@ -184,6 +184,7 @@ public class Controller {
         //ServiceXml.getInstance().store(model.getCurrent_user());
       //  model.getActivos().add(c);
         XmlPersister.getInstance(model.getCurrent_user().getId()).store(ServiceXml.getInstance().getData());
+        this.model.fixList();
         model.commit();
     }
     
@@ -191,7 +192,13 @@ public class Controller {
     public Client getUserController(){
         return model.getCurrent_user();
     }
-
+    
+    public void setStateFriends(List<Client> friends){
+        System.out.println("CONTROLLER SETSTATE FRIENDS----------");
+        model.setAllFriends(friends);
+        this.model.fixList();
+        model.commit();
+    }
     
 
 
@@ -226,6 +233,8 @@ public class Controller {
         }
         
     }
+    
+    
     
     
     
